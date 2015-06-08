@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-
+#include <unordered_map>
 using namespace std;
 
 class Solution {
@@ -42,7 +42,7 @@ public:
         return result;
     }
 
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> twoSum4(vector<int>& nums, int target) {
         vector<int> result;
         map<int,int> m;
         for(int i=0;i<nums.size();i++){
@@ -67,6 +67,29 @@ public:
             }
         }
         return result;
+    }
+
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        vector<int> ret(2,-1);
+        unordered_map<int, int> m;    //value->index map
+        for(int i = 0; i < numbers.size(); i ++)
+        {
+            if(m.find(target-numbers[i]) == m.end())
+                //target-numbers[i] not appeared, but we can ensure it will not matched in the future, so we should store it.
+                //in this way, the duplicate problem is solved
+                //If there are two numbers are the same, a == b
+                //case a+b==target, we we meet b again, then algorithm is over
+                //case a+b!=target, but a+c=target, this case does not exist, there is only one solution
+                //so the index overlap of the equal number is nothing if occur.
+                // if overlap occur, then it means a+b!=target, and not exit c which a+c=target and b+c=target, so it is secure
+                m[numbers[i]] = i;
+            else
+            {
+                ret[0] = m[target-numbers[i]]+1;
+                ret[1] = i+1;
+                return ret;
+            }
+        }
     }
 };
 
